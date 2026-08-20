@@ -62,9 +62,17 @@ if (isset($_POST['excluir'])) {
 // EDITAR
 if (isset($_POST['editar'])) {
 
-    $id = $_POST['id'];
-    $nome = $_POST['nome'];
-    $email = $_POST['email'];
+    $id = filter_var($_POST['id'], FILTER_VALIDATE_INT);
+    if ($id === false) {
+        die("ID inválido!");
+    }
+
+    $nome = trim($_POST['nome']);
+    $email = trim($_POST['email']);
+
+    if (empty($nome) || empty($email)) {
+        die("Nome e email são obrigatórios!");
+    }
 
     $sql = "UPDATE usuarios SET nome = ?, email = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
