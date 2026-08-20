@@ -52,7 +52,7 @@ if (isset($_POST['editar'])) {
     $sql = "UPDATE usuarios SET nome = ?, email = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
 
-    $stmt->bind_param("ssi", $nome, $email, $id)
+    $stmt->bind_param("ssi", $nome, $email, $id);
     $stmt->execute();
 
     header("Location: index.php");
