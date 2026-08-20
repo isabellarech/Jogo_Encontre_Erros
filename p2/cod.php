@@ -144,17 +144,17 @@ $resultado = $conn->query($sql);
                 </td>
 
                 <td>
-                    <?= $usuario['nome'] ?>
+                    <?= htmlspecialchars($usuario['nome']) ?>
                 </td>
 
                 <td>
-                    <?= $usuario['email'] ?>
+                    <?= htmlspecialchars($usuario['email']) ?>
                 </td>
 
                 <td>
 
                     <form method="POST" style="display:inline;">
-                        <input type="hidden" name="excluir" value="<?= $usuario['id'] ?>">
+                        <input type="hidden" name="excluir" value="<?= htmlspecialchars($usuario['id']) ?>">
                         <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                         <button type="submit" onclick="return confirm('Tem certeza?')">Excluir</button>
                     </form>
