@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 $host = "localhost";
 $user = "root";
 $password = "";
@@ -9,6 +11,11 @@ $conn = new mysqli($host, $user, $password, $database);
 
 if ($conn->connect_error) {
     die("Erro na conexão: " . $conn->connect_error);
+}
+
+// Gerar token CSRF se não existir
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
 // CADASTRAR
@@ -28,9 +35,18 @@ if (isset($_POST['cadastrar'])) {
 }
 
 // EXCLUIR
-if (isset($_GET['excluir'])) {
-
-    $id = $_GET['excluir'];
+if (isset($_POST['excluir'])) {
+    
+    // Validar token CSRF
+    if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
+        die("Token CSRF inválido!");
+    }
+    
+    // Validar se ID é um número inteiro
+    $id = filter_var($_POST['excluir'], FILTER_VALIDATE_INT);
+    if ($id === false) {
+        die("ID inválido!");
+    }
 
     $sql = "DELETE FROM usuarios WHERE id = ?";
     $stmt = $conn->prepare($sql);
@@ -89,6 +105,7 @@ $resultado = $conn->query($sql);
 
         <br><br>
 
+        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
         <button type="submit" name="cadastrar">
             Cadastrar
         </button>
@@ -127,9 +144,11 @@ $resultado = $conn->query($sql);
 
                 <td>
 
-                    <a href="index.php?excluir=<?= $usuario['id'] ?>">
-                        Excluir
-                    </a>
+                    <form method="POST" style="display:inline;">
+                        <input type="hidden" name="excluir" value="<?= $usuario['id'] ?>">
+                        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                        <button type="submit" onclick="return confirm('Tem certeza?')">Excluir</button>
+                    </form>
 
                 </td>
 
