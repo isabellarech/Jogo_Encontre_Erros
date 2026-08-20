@@ -61,7 +61,7 @@ if (isset($_POST['editar'])) {
 
 // BUSCAR USUÁRIOS
 $sql = "SELECT id, nome, email FROM usuarios ORDER BY id DESC";
-$resultado = $conn->query($sql)
+$resultado = $conn->query($sql);
 
 ?>
 
