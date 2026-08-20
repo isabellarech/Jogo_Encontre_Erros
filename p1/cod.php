@@ -106,7 +106,10 @@ $resultado = $conn->query($sql);
             <th>Ações</th>
         </tr>
 
-        <?php while ($usuario = $resultado->fetch_assoc()) { ?>
+        <?php 
+        if ($resultado) {
+            while ($usuario = $resultado->fetch_assoc()) { 
+        ?>
 
             <tr>
 
@@ -132,7 +135,7 @@ $resultado = $conn->query($sql);
 
             </tr>
 
-        <?php } ?>
+        <?php } } ?>
 
     </table>
 
